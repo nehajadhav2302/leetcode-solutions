@@ -3,19 +3,18 @@ class Solution:
         if not nums:
             return 0
 
-        nums.sort()
-        n = len(nums)
-        max_seq = 1
-        curr_seq = 1
+        values = set(nums)
+        max_seq = 0
 
-        for i in range(n - 1):
-            if nums[i] + 1 == nums[i + 1]:
-                curr_seq += 1
-                max_seq = max(max_seq, curr_seq)
-            
-            elif nums[i] == nums[i + 1]:
+        for value in values:
+            if value - 1 in values:
                 continue
+            
+            curr_seq = 1
+            next_value = value + 1
 
-            else:
-                curr_seq = 1
+            while next_value in values:
+                curr_seq += 1
+                next_value += 1
+            max_seq = max(max_seq, curr_seq)
         return max_seq
