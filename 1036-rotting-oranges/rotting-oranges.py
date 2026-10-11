@@ -1,39 +1,39 @@
 from collections import deque
 class Solution:
-    def orangesRotting(self, grid: List[List[int]]) -> int:
-        n = len(grid)
-        m = len(grid[0])
+    def orangesRotting(self, grid: list[list[int]]) -> int:
+        if not grid or not grid[0]:
+            return 0
+
+        n, m = len(grid), len(grid[0])
         q = deque()
-        total = 0
-        count = 0
+        time = 0
+        fresh = 0
 
         for i in range(n):
             for j in range(m):
-                if grid[i][j] != 0:
-                    total += 1
+                if grid[i][j] == 1:
+                    fresh += 1
                 if grid[i][j] == 2:
                     q.append((i, j))
-        
-        direction = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-        mins = 0
 
-        while q:
+        d_row = [0, 1, 0, -1]
+        d_col = [1, 0, -1, 0]
+
+        while q and fresh > 0:
             k = len(q)
-            count += k
 
             for _ in range(k):
                 x, y = q.popleft()
 
-                for dx, dy in direction:
-                    nx, ny = x + dx, y + dy
-                
-                    if nx < 0 or nx >= n or ny < 0 or ny >= m or grid[nx][ny] != 1:
-                        continue
-                    
-                    grid[nx][ny] = 2
-                    q.append((nx, ny))
+                for i in range(4):
+                    nrow = x + d_row[i]
+                    ncol = y + d_col[i]
+
+                    if 0 <= nrow < n and 0 <= ncol < m and grid[nrow][ncol] == 1:
+                        grid[nrow][ncol] = 2
+                        fresh -= 1
+                        q.append((nrow, ncol))
             
-            if q:
-                mins += 1
-            
-        return mins if total == count else -1
+            time += 1
+        
+        return time if fresh == 0 else -1
