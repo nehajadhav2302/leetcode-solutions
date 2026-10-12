@@ -1,28 +1,26 @@
 from collections import deque
 class Solution:
-    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+    def findOrder(self, numCourses: int, prerequisites: list[list[int]]) -> list[int]:
         adj = [[] for _ in range(numCourses)]
-        indegree = [0] * numCourses
-
         for v, u in prerequisites:
             adj[u].append(v)
-            indegree[v] += 1
+        
+        indegree = [0] * numCourses
+        for i in range(numCourses):
+            for neigh in adj[i]:
+                indegree[neigh] += 1
         
         q = deque()
         for i in range(numCourses):
             if indegree[i] == 0:
                 q.append(i)
-        
-        res = []
-
+        path = []
         while q:
             node = q.popleft()
-            res.append(node)
+            path.append(node)
 
             for neigh in adj[node]:
                 indegree[neigh] -= 1
-
                 if indegree[neigh] == 0:
                     q.append(neigh)
-        
-        return res if len(res) == numCourses else []
+        return path if len(path) == numCourses else []
